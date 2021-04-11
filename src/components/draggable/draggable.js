@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Draggable(props: DraggableProps) {
+export function Draggable(props) {
   const {onDragStart, onDragEnd, onDrag, enabled = true} = props;
   return (
     <div
