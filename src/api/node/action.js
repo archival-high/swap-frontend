@@ -5,7 +5,7 @@ const instance = axios.create({
 });
 
 export class NodeAction {
-    static async updateParent({from, to, target}){
+    static async setParent({from, to, target}){
         return await instance.post(`/from/${from}/link/update-target`, {
             to,
             target

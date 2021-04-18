@@ -10,7 +10,12 @@ export type Node = {
     _is_enabled?: boolean,
     _updated_at?: IsoString,
     type: Type
-    title?: string,
+    _title?: string,
     preview?: string,
     data?: string
+    _children?: Node[]
+}
+
+export type NodeComponentProps = {
+    node: Node
 }

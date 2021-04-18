@@ -1,7 +1,16 @@
-import React, {useState} from "react";
-import {DropEffect} from "./drop-effect.const";
+import React, {DragEventHandler, ReactNode, useState} from "react";
+import {DropEffect} from "./drop-effect.enum";
 
-export function DropZone(props) {
+type DropZoneProps = {
+  type?: DropEffect,
+  onDragEnter?: DragEventHandler,
+  onDragLeave?: DragEventHandler,
+  onDragOver?: DragEventHandler,
+  onDrop?: DragEventHandler,
+  children?: ReactNode
+}
+
+export function DropZone(props: DropZoneProps) {
   const {type = DropEffect.MOVE} = props;
 
   const [opacity, setOpacity] = useState(100);
@@ -18,12 +27,12 @@ export function DropZone(props) {
     }
   } = props;
 
-  const _onDragEnter = e => {
+  const _onDragEnter: DragEventHandler<HTMLDivElement> = e => {
     e.preventDefault();
     e.stopPropagation();
     onDragEnter(e);
   };
-  const _onDragOver = e => {
+  const _onDragOver: DragEventHandler<HTMLDivElement> = e => {
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = type;
