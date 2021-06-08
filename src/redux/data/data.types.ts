@@ -1,7 +1,8 @@
-import {Node} from "../../module/node/type/node.type"
+import {Node} from "../../module/node/types/node.type"
+import {NodeDto} from "../../module/node/entities/node.entity";
 
 export type NodeLookup = {
-    [key: string]: Node
+    [key: string]: NodeDto
 }
 
 export type DoubleIdLookup = {

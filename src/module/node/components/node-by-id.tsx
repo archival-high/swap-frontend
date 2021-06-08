@@ -3,6 +3,7 @@ import {RootState} from "../../../redux";
 import {NodeDisplay} from "./display/node-display";
 import {Button, Container} from "@material-ui/core";
 import {useState} from "react";
+import {deserialize} from "class-transformer";
 
 type Props = {
     id: string
@@ -11,8 +12,9 @@ export function NodeById (props: Props){
     const {id} = props;
     const [children, setChildren] = useState<string[]>([]);
     const lookup = useSelector((state: RootState) => state.data.nodes);
-    const linkTable = useSelector((state: RootState) => state.data.link);
+    const linkTable = useSelector((state: RootState) => state.data.backlink);
     // console.log(linkTable);
+    // console.log(id);
     // if (!id){
     //     return null;
     // }
@@ -39,7 +41,7 @@ export function NodeById (props: Props){
             </div>
             <Container>
                 {children.map (child => (
-                    <NodeById id={child}/>
+                    <NodeById id={child} key={child}/>
                 ))}
             </Container>
         </div>

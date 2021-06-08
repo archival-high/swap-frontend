@@ -1,4 +1,4 @@
-import {NodeComponentProps} from "../../type/node.type";
+import {NodeComponentProps} from "../../types/node.type";
 import {NodeDisplay} from "../display/node-display";
 import {Draggable} from "../../../../components/draggable";
 import {DropZone} from "../../../../components/drop-zone";
@@ -7,16 +7,16 @@ import {setParent} from "../../../../redux/data";
 
 export function NodeDraggable(props: NodeComponentProps) {
     const {node} = props;
-    const {_id} = node;
+    const {id} = node;
     const dispatch = useDispatch();
     return (
         <DropZone onDrop={e => {
             const fromId = e.dataTransfer?.getData('text/plain');
             if (fromId){
-                dispatch(setParent({child: fromId, parent: _id}));
+                dispatch(setParent({child: fromId, parent: id}));
             }
         }}>
-            <Draggable onDragStart={e => e.dataTransfer.setData('text/plain', _id)}>
+            <Draggable onDragStart={e => e.dataTransfer.setData('text/plain', id)}>
                 <NodeDisplay node={node}/>
             </Draggable>
         </DropZone>

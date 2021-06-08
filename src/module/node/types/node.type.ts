@@ -1,3 +1,5 @@
+import { NodeDto } from "../entities/node.entity"
+
 export type IsoString = string
 
 export enum Type {
@@ -17,5 +19,5 @@ export type Node = {
 }
 
 export type NodeComponentProps = {
-    node: Node
+    node: NodeDto
 }

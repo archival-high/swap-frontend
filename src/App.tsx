@@ -16,6 +16,7 @@ function App() {
 
     const dispatch = useDispatch();
     const root = useSelector((state: RootState) => state.data.root);
+    console.log(root)
     const presetLookup = useSelector((state: RootState) => state.data.preset);
     console.log(presetLookup);
     const [value, setValue] = useState('');

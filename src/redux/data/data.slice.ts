@@ -1,16 +1,18 @@
 import {createSlice} from "@reduxjs/toolkit";
+import { NodeDto } from "../../module/node/entities/node.entity";
 import {initialState} from "./data.const";
+import {ApiId} from "../../module/node/types/api.type";
 
 const dataSlice = createSlice({
     name: 'data',
     initialState: initialState,
     reducers: {
         putNode: (state, action) => {
-            const node = action.payload;
-            state.nodes[node._id] = node;
+            const node: NodeDto = action.payload;
+            state.nodes[node.id] = node;
         },
         removeNode: (state, action) => {
-            const id = action.payload;
+            const id: ApiId = action.payload;
             delete state.nodes[id];
         },
         setRoot: (state, action) => {

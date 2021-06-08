@@ -1,15 +1,18 @@
 import {Dispatch} from "redux";
-import {Node} from "../../module/node/type/node.type"
+import {Node} from "../../module/node/types/node.type"
 import {addLink, putNode, setPreset, setRoot} from "./data.slice";
 import {NodeApi} from "../../api/node";
-import {Type} from "../../module/node/type/node.type";
+import {Type} from "../../module/node/types/node.type";
 import {PresetApi} from "../../api/presets";
+import {NodeDto} from "../../module/node/entities/node.entity";
+import {RelationshipApi} from "../../api/relationships/get-relationship";
+import {RelationshipDto} from "../../module/relationships/entities/relationship.entity";
 
 export function grabAll() {
     return (dispatch: Dispatch) => {
-        return NodeApi.Query.getAll().then(res => {
-            res.data.data.forEach((node: Node) => {
-                dispatch(putNode(node));
+        return NodeApi.Query.getAll().then((nodes: NodeDto[]) => {
+            nodes.forEach((n) => {
+                dispatch(putNode(n));
             })
         })
     }
@@ -18,14 +21,14 @@ export function grabAll() {
 export function createNew(oneLine: string) {
     return (dispatch: Dispatch) => {
         return NodeApi.Restful.createNode()
-            .then(res => {
-                return NodeApi.Restful.editNode(res.data.data._id, {
+            .then(node => {
+                return NodeApi.Restful.editNode(node.id, {
                     title: oneLine,
                     type: Type.DUMP
                 })
             })
-            .then((res) => {
-                dispatch(putNode(res.data.data));
+            .then((node) => {
+                dispatch(putNode(node));
             }).catch(err => {
                 console.error(err);
             })
@@ -43,7 +46,7 @@ export function setParent(input: SetParentInput) {
             target: null
         }).then(res => {
             console.log(res.data);
-        }).catch (e => {
+        }).catch(e => {
             console.log(e);
         })
         return;
@@ -53,8 +56,8 @@ export function setParent(input: SetParentInput) {
 export function createPreset() {
     return (dispatch: Dispatch) => {
         return PresetApi.Action.create()
-            .then(res => {
-                res.data.data.forEach((node: Node) => {
+            .then(nodes => {
+                nodes.forEach((node: Node) => {
                     dispatch(putNode(node));
                 })
             })
@@ -64,18 +67,24 @@ export function createPreset() {
 export function getPreset() {
     return (dispatch: Dispatch) => {
         return PresetApi.Query.getAll()
-            .then(res => {
-                res.data.data.forEach((node: Node) => {
-                    dispatch(putNode(node));
-                    if (node._title === "_root"){
-                        dispatch(setRoot(node._id));
+            .then(nodes => {
+                nodes.forEach((n: NodeDto) => {
+                    dispatch(putNode(n));
+                    if (n.title === "root") {
+                        dispatch(setRoot(n.id));
                     }
-                    if(node._children){
-                        node._children.forEach(c => {
-                            dispatch(addLink({from: node._id, to: c._id}))
-                        })
-                    }
-                    dispatch(setPreset({title: node._title, _id: node._id}))
+                    dispatch(setPreset({title: n.title, id: n.id}));
+
+                });
+                return nodes;
+            })
+            .then(nodes => {
+                nodes.forEach((n: NodeDto) => {
+                    RelationshipApi
+                        .getRelationships(undefined, n.id)
+                        .then((rs: RelationshipDto[]) => {
+                            rs.forEach(r => dispatch(addLink({from: r.from, to: r.to})))
+                        });
                 })
             })
     }
