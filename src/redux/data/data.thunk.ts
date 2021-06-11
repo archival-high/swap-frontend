@@ -45,7 +45,7 @@ export function setParent(input: SetParentInput) {
             to: parent,
             target: null
         }).then(res => {
-            console.log(res.data);
+            dispatch(addLink({from: child, to: parent}));
         }).catch(e => {
             console.log(e);
         })
